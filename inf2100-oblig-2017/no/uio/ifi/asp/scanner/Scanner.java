@@ -16,106 +16,125 @@ public class Scanner {
 
 
     public Scanner(String fileName) {
-	curFileName = fileName;
-	indents[0] = 0;  numIndents = 1;
+		curFileName = fileName;
+		indents[0] = 0;  numIndents = 1;
 
-	try {
-	    sourceFile = new LineNumberReader(
-			    new InputStreamReader(
-				new FileInputStream(fileName),
-				"UTF-8"));
-	} catch (IOException e) {
-	    scannerError("Cannot read " + fileName + "!");
-	}
+		try {
+			sourceFile = new LineNumberReader(
+					new InputStreamReader(
+					new FileInputStream(fileName),
+					"UTF-8"));
+		} catch (IOException e) {
+			scannerError("Cannot read " + fileName + "!");
+		}
+		//Read the whole file
+		readNextLine();
+		while(curLineTokens.get(0).kind != eofToken)readNextLine();
     }
 
 
     private void scannerError(String message) {
-	String m = "Asp scanner error";
-	if (curLineNum() > 0)
-	    m += " on line " + curLineNum();
-	m += ": " + message;
+		String m = "Asp scanner error";
+		if (curLineNum() > 0)
+			m += " on line " + curLineNum();
+		m += ": " + message;
 
-	Main.error(m);
+		Main.error(m);
     }
 
 
     public Token curToken() {
-	while (curLineTokens.isEmpty()) {
-	    readNextLine();
-	}
-	return curLineTokens.get(0);
+		while (curLineTokens.isEmpty()) {
+			readNextLine();
+		}
+		return curLineTokens.get(0);
     }
 
 
     public void readNextToken() {
-	if (! curLineTokens.isEmpty())
-	    curLineTokens.remove(0);
+		if (! curLineTokens.isEmpty())
+			curLineTokens.remove(0);
     }
 
 
     public boolean anyEqualToken() {
-	for (Token t: curLineTokens) {
-	    if (t.kind == equalToken) return true;
-	}
-	return false;
+		for (Token t: curLineTokens) {
+			if (t.kind == equalToken) return true;
+		}
+		return false;
     }
 
 
     private void readNextLine() {
-	curLineTokens.clear();
+		curLineTokens.clear();
 
-	// Read the next line:
-	String line = null;
-	try {
-	    line = sourceFile.readLine();
-	    if (line == null) {
-		sourceFile.close();
-		sourceFile = null;
-	    } else {
-		Main.log.noteSourceLine(curLineNum(), line);
-	    }
-	} catch (IOException e) {
-	    sourceFile = null;
-	    scannerError("Unspecified I/O error!");
+		// Read the next line:
+		String line = null;
+		try {
+			line = sourceFile.readLine();
+
+			if (line == null) {
+				sourceFile.close();
+				sourceFile = null;
+			} else {
+				Main.log.noteSourceLine(curLineNum(), line);
+			}
+		} catch (IOException e) {
+			sourceFile = null;
+			scannerError("Unspecified I/O error!");
+
+		}
+		//Break up the line and create tokens
+		String tmp = "";
+		if(line != null) {
+			for (char ch : line.toCharArray()) {
+				if (ch == '#') break;
+				if (isLetterAZ(ch)) {
+					tmp += ch;
+				}
+			}
+		}else{
+			//When the file has no more lines, make a eoftoken to stop the process
+			curLineTokens.add(new Token(eofToken, curLineNum()));
+		}
+		System.out.println(tmp);
+		//-- Must be changed in part 1:
+
+		// Terminate line:
+		curLineTokens.add(new Token(newLineToken,curLineNum()));
+
+		for (Token t: curLineTokens)
+			Main.log.noteToken(t);
+
 	}
-
-	//-- Must be changed in part 1:
-
-	// Terminate line:
-	curLineTokens.add(new Token(newLineToken,curLineNum()));
-
-	for (Token t: curLineTokens) 
-	    Main.log.noteToken(t);
-    }
 
     public int curLineNum() {
 	return sourceFile!=null ? sourceFile.getLineNumber() : 0;
     }
 
     private int findIndent(String s) {
-	int indent = 0;
+		int indent = 0;
 
-	while (indent<s.length() && s.charAt(indent)==' ') indent++;
-	return indent;
+		while (indent<s.length() && s.charAt(indent)==' ') indent++;
+		return indent;
     }
 
     private String expandLeadingTabs(String s) {
-	String newS = "";
-	for (int i = 0;  i < s.length();  i++) {
-	    char c = s.charAt(i);
-	    if (c == '\t') {
-		do {
-		    newS += " ";
-		} while (newS.length()%tabDist != 0);
-	    } else if (c == ' ') {
-		newS += " ";
-	    } else {
-		newS += s.substring(i);
-		break;
-	    }
-	}
-	return newS;
+		String newS = "";
+		for (int i = 0;  i < s.length();  i++) {
+			char c = s.charAt(i);
+			if (c == '\t') {
+			do {
+				newS += " ";
+			} while (newS.length()%tabDist != 0);
+			} else if (c == ' ') {
+			newS += " ";
+			} else {
+			newS += s.substring(i);
+			break;
+			}
+		}
+		return newS;
     }
 
 
@@ -130,29 +149,29 @@ public class Scanner {
 
 
     public boolean isCompOpr() {
-	TokenKind k = curToken().kind;
-	//-- Must be changed in part 2:
-	return false;
+		TokenKind k = curToken().kind;
+		//-- Must be changed in part 2:
+		return false;
     }
 
 
     public boolean isFactorPrefix() {
-	TokenKind k = curToken().kind;
-	//-- Must be changed in part 2:
-	return false;
+		TokenKind k = curToken().kind;
+		//-- Must be changed in part 2:
+		return false;
     }
 
 
     public boolean isFactorOpr() {
-	TokenKind k = curToken().kind;
-	//-- Must be changed in part 2:
-	return false;
+		TokenKind k = curToken().kind;
+		//-- Must be changed in part 2:
+		return false;
     }
 	
 
     public boolean isTermOpr() {
-	TokenKind k = curToken().kind;
-	//-- Must be changed in part 2:
-	return false;
+		TokenKind k = curToken().kind;
+		//-- Must be changed in part 2:
+		return false;
     }
 }
