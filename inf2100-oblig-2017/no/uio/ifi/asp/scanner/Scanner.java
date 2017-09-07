@@ -116,24 +116,27 @@ public class Scanner {
 					tmp = "";
 				}else if(isDigit(ch[i])){
 					boolean fl = false;
-					while(true){
-						if(ch.length > i + 1){
-							break;
-						}else if(isDigit(ch[i+1])){
-							i++;
-						}else if(ch[i+1] == '.'){
-							i++;
+					tmp += ch[i++];
+					while(ch.length > i){
+						if(isDigit(ch[i])){
+							tmp += ch[i++];
+						}else if(ch[i] == '.'){
+							tmp += ch[i++];
 							fl = true;
 						}else{
+							//TODO WRITE ERROR MESSAGE
 							break;
 						}
 					}
 					if(fl){
-						curLineTokens.add(new Token(floatToken,curLineNum()));
-						//TODO Lagre float i token
+						Token tmpFloat = new Token(floatToken, curLineNum());
+						tmpFloat.floatLit = Float.parseFloat(tmp);
+						curLineTokens.add(tmpFloat);
+
 					}else{
-						curLineTokens.add(new Token(integerToken,curLineNum()));
-						//TODO lagre int i token
+						Token tmpInteger = new Token(integerToken, curLineNum());
+						tmpInteger.integerLit = Integer.parseInt(tmp);
+						curLineTokens.add(tmpInteger);
 					}
 				}
 				else if(ch[i] == '\"'){
@@ -150,8 +153,6 @@ public class Scanner {
 					Token tmpString = new Token(stringToken, curLineNum());
 					tmpString.stringLit = tmp;
 					curLineTokens.add(tmpString);
-
-
 					tmp = "";
 				}else{
 
