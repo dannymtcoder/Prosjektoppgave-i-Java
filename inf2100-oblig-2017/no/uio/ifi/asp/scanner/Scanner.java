@@ -86,33 +86,37 @@ public class Scanner {
 		}
 		//Break up the line and create tokens
 		String tmp = "";
+		boolean none = false;
 		if(line != null) {
 			char[] ch = line.toCharArray();
-			for (int i = 0; i<ch.length;i++) {
+			for (int i = 0; i<ch.length;) {
 				if (ch[i] == '#') {
+					none = true;
 					break;
 				}
+				//Fix
 				if (isLetterAZ(ch[i])) {
-					while(true){
-						tmp += ch[i];
+					boolean isnameToken = true;
+					tmp += ch[i++];
+					while(ch.length > i){
 						if(isLetterAZ(ch[i]) || isDigit(ch[i])){
-							i++;
+							tmp += ch[i++];
 						}else{
 							break;
 						}
 					}
 					//Checks keywords
 					for(TokenKind k: TokenKind.values()){
-						if(k.equals(tmp)){
+						if(k.toString().equals(tmp)){
 							curLineTokens.add(new Token(k,curLineNum()));
-							tmp = "";
+							isnameToken = false;
 						}
 					}
-					if(tmp != null){
-						//System.out.println(tmp + " ");
+					if(isnameToken){
 						curLineTokens.add(new Token(nameToken,curLineNum()));
-						curToken().name = tmp;
+						curLineTokens.get(curLineTokens.size()-1).name = tmp;
 					}
+
 					tmp = "";
 				}else if(isDigit(ch[i])){
 					boolean fl = false;
@@ -138,6 +142,7 @@ public class Scanner {
 						tmpInteger.integerLit = Integer.parseInt(tmp);
 						curLineTokens.add(tmpInteger);
 					}
+					tmp = "";
 				}
 				else if(ch[i] == '\"'){
 					tmp += ch[i++];
@@ -158,23 +163,25 @@ public class Scanner {
 
 					//If the character is special letters
 					if(ch[i] != ' '){
-						while(true) {
-							tmp += ch[i];
-							if (ch.length > i + 1 && ch[i + 1] != ' ' && !isDigit(ch[i + 1]) && !isLetterAZ(ch[i + 1]) && ch[i + 1] != '\"'){
-								i++;
+						tmp += ch[i++];
+						while(ch.length > i) {
+							if (ch[i] != ' ' && !isDigit(ch[i]) && !isLetterAZ(ch[i])
+									&& ch[i] != '\"' && ch[i] != ':'){
+								tmp += ch[i++];
 							}else{
 								break;
 							}
 						}
-						//System.out.println(tmp);
-						for(TokenKind k: TokenKind.values()){
-							if(k.equals(tmp)){
 
+						for(TokenKind k: TokenKind.values()){
+							if(k.toString().equals(tmp)){
 								curLineTokens.add(new Token(k,curLineNum()));
-								tmp = "";
 							}
 						}
 						// TODO Make an error when we have not found any special letters token
+					}else{
+						//If the ch[i] is a whitespace
+						i++;
 					}
 					tmp = "";
 				}
@@ -182,18 +189,17 @@ public class Scanner {
 			}
 		}else{
 			//When the file has no more lines, make a eoftoken to stop the process
-
 			curLineTokens.add(new Token(eofToken, curLineNum()));
 		}
-		//System.out.println(line);
 		//-- Must be changed in part 1:
 
 		// Terminate line:
-
-		curLineTokens.add(new Token(newLineToken,curLineNum()));
-
-
-
+		if(!none) {
+			curLineTokens.add(new Token(newLineToken, curLineNum()));
+		}else{
+			//TODO Fix when there is a comment
+			curLineTokens.add(new Token(newLineToken, curLineNum()));
+		}
 		for (Token t: curLineTokens)
 			Main.log.noteToken(t);
 
