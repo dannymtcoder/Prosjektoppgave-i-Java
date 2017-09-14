@@ -106,7 +106,7 @@ public class Scanner {
 						}
 					}
 					//Checks keywords
-					for(TokenKind k: TokenKind.values()){
+					for(TokenKind k : EnumSet.range(andToken, yieldToken)){
 						if(k.toString().equals(tmp)){
 							curLineTokens.add(new Token(k,curLineNum()));
 							isnameToken = false;
@@ -122,14 +122,15 @@ public class Scanner {
 					boolean fl = false;
 					tmp += ch[i++];
 					while(ch.length > i){
+						System.out.println(ch[i]);
 						if(isDigit(ch[i])){
 							tmp += ch[i++];
 						}else if(ch[i] == '.'){
 							tmp += ch[i++];
 							fl = true;
 						}else{
-							//TODO WRITE ERROR MESSAGE
-							break;
+							tmp += ch[i++];
+							scannerError("Not a float or an integer \t\t" + tmp);
 						}
 					}
 					if(fl){
@@ -146,39 +147,58 @@ public class Scanner {
 				}
 				else if(ch[i] == '\"'){
 					tmp += ch[i++];
-
+					boolean found = false;
 					while(ch.length > i){
 						if(ch[i] == '\"'){
-							tmp += ch[i];
+							tmp += ch[i++];
+							found = true;
 							break;
 						}
 						tmp += ch[i++];
 					}
-					// TODO Make an error when a second \" is not found
+					if(!found){
+						scannerError("String not closed, missing a second \" ");
+					}
 					Token tmpString = new Token(stringToken, curLineNum());
 					tmpString.stringLit = tmp;
 					curLineTokens.add(tmpString);
 					tmp = "";
 				}else{
-
 					//If the character is special letters
 					if(ch[i] != ' '){
 						tmp += ch[i++];
 						while(ch.length > i) {
 							if (ch[i] != ' ' && !isDigit(ch[i]) && !isLetterAZ(ch[i])
-									&& ch[i] != '\"' && ch[i] != ':'){
+									&& ch[i] != '\"'){
 								tmp += ch[i++];
 							}else{
 								break;
 							}
 						}
-
-						for(TokenKind k: TokenKind.values()){
+						boolean found = false;
+						for(TokenKind k : EnumSet.range(ampToken, slashEqualToken)){
 							if(k.toString().equals(tmp)){
+								found = true;
 								curLineTokens.add(new Token(k,curLineNum()));
 							}
 						}
-						// TODO Make an error when we have not found any special letters token
+						String eMessage = "\"" +  tmp + "\"";
+						while(found == false){
+							try{
+								tmp = tmp.substring(0, tmp.length() - 1);
+								i--;
+							}catch(Exception e){
+								found = true;
+								scannerError("Not a delimters or operator \t\t" + eMessage);
+								//ERROR
+							}
+							for(TokenKind k : EnumSet.range(ampToken, slashEqualToken)){
+								if(k.toString().equals(tmp)){
+									found = true;
+									curLineTokens.add(new Token(k,curLineNum()));
+								}
+							}
+						}
 					}else{
 						//If the ch[i] is a whitespace
 						i++;
@@ -191,8 +211,6 @@ public class Scanner {
 			//When the file has no more lines, make a eoftoken to stop the process
 			curLineTokens.add(new Token(eofToken, curLineNum()));
 		}
-		//-- Must be changed in part 1:
-
 		// Terminate line:
 		if(!none) {
 			curLineTokens.add(new Token(newLineToken, curLineNum()));
