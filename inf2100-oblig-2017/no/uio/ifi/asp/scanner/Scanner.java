@@ -87,14 +87,16 @@ public class Scanner {
 		//Break up the line and create tokens
 		String tmp = "";
 		boolean none = false;
+		boolean skip = false;
 		if(line != null) {
 			char[] ch = line.toCharArray();
 			for (int i = 0; i<ch.length;) {
 				if (ch[i] == '#') {
 					none = true;
+					skip = true;
 					break;
 				}
-				//Fix
+				//Checks if it is a keyword or put it as a nameToken
 				if (isLetterAZ(ch[i])) {
 					boolean isnameToken = true;
 					tmp += ch[i++];
@@ -119,18 +121,25 @@ public class Scanner {
 
 					tmp = "";
 				}else if(isDigit(ch[i])){
+					//Checks if it is an integer og a float
 					boolean fl = false;
 					tmp += ch[i++];
-					while(ch.length > i){
-						System.out.println(ch[i]);
-						if(isDigit(ch[i])){
+					while(ch.length > i) {
+						if (isDigit(ch[i])) {
 							tmp += ch[i++];
-						}else if(ch[i] == '.'){
+						} else if (ch[i] == '.') {
 							tmp += ch[i++];
+							try{
+								if(!isDigit(ch[i])){
+									scannerError("Not a valid float");
+								}
+							}catch(Exception e){
+								scannerError("Not a valid float");
+							}
+
 							fl = true;
 						}else{
-							tmp += ch[i++];
-							scannerError("Not a float or an integer \t\t" + tmp);
+							break;
 						}
 					}
 					if(fl){
@@ -145,24 +154,45 @@ public class Scanner {
 					}
 					tmp = "";
 				}
-				else if(ch[i] == '\"'){
+				else if(ch[i] == '\"') {
+					//Find the whole string
 					tmp += ch[i++];
 					boolean found = false;
-					while(ch.length > i){
-						if(ch[i] == '\"'){
+					while (ch.length > i) {
+						if (ch[i] == '\"') {
 							tmp += ch[i++];
 							found = true;
 							break;
 						}
 						tmp += ch[i++];
 					}
-					if(!found){
+					if (!found) {
 						scannerError("String not closed, missing a second \" ");
 					}
 					Token tmpString = new Token(stringToken, curLineNum());
 					tmpString.stringLit = tmp;
 					curLineTokens.add(tmpString);
 					tmp = "";
+				}else if(ch[i] == '\''){
+					//Find the whole string
+					tmp += ch[i++];
+					boolean found = false;
+					while (ch.length > i) {
+						if (ch[i] == '\'') {
+							tmp += ch[i++];
+							found = true;
+							break;
+						}
+						tmp += ch[i++];
+					}
+					if (!found) {
+						scannerError("String not closed, missing a second \' ");
+					}
+					Token tmpString = new Token(stringToken, curLineNum());
+					tmpString.stringLit = tmp;
+					curLineTokens.add(tmpString);
+					tmp = "";
+
 				}else{
 					//If the character is special letters
 					if(ch[i] != ' '){
@@ -210,6 +240,23 @@ public class Scanner {
 		}else{
 			//When the file has no more lines, make a eoftoken to stop the process
 			curLineTokens.add(new Token(eofToken, curLineNum()));
+			skip = true;
+		}
+		//Create indent or dedent
+		if(!skip && curLineTokens.size() != 0){
+			line = expandLeadingTabs(line);
+			int indent = findIndent(line);
+			System.out.println(indent);
+			if(indents[numIndents-1] < indent){
+				indents[numIndents++] = indent;
+				curLineTokens.add(0, new Token(indentToken,curLineNum()));
+			}else if(indents[numIndents-1] > indent){
+				indents[numIndents++] = indent;
+				curLineTokens.add(0, new Token(dedentToken,curLineNum()));
+			}else{
+				indents[numIndents++] = indent;
+
+			}
 		}
 		// Terminate line:
 		if(!none) {
