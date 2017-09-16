@@ -143,7 +143,7 @@ public class Scanner {
 					}
 					if(fl){
 						Token tmpFloat = new Token(floatToken, curLineNum());
-						tmpFloat.floatLit = Float.parseFloat(tmp);
+						tmpFloat.floatLit = Double.parseDouble(tmp);
 						curLineTokens.add(tmpFloat);
 
 					}else{
@@ -247,37 +247,29 @@ public class Scanner {
 			int indent = findIndent(line);
 
 			if(indents[numIndents-1] < indent){
-				int count = indents[numIndents-1];
 				indents[numIndents++] = indent;
 				curLineTokens.add(0, new Token(indentToken,curLineNum()));
-				if(findTabLength){
-					tabLength = indent;
-					findTabLength = false;
-				}
-				while(count<indent){
-					curLineTokens.add(0, new Token(indentToken,curLineNum()));
-					count += tabLength;
-				}
 			}else if(indents[numIndents-1] > indent){
-				int count = indents[numIndents-1];
+				int count = numIndents-1;
 				indents[numIndents++] = indent;
-
-				curLineTokens.add(0, new Token(dedentToken, curLineNum()));
-				count -= tabLength;
-
-				//Creates more than one dedent if the previous line was idented twice
-				while(count>indent) {
-					curLineTokens.add(0, new Token(dedentToken, curLineNum()));
-					count -= tabLength;
+				boolean indentError = true;
+				int lower = indents[count];
+				//
+				while(count != -1) {
+					if(lower > indents[count]) {//Makes a dedent token if we are going lower
+						lower = indents[count];
+						curLineTokens.add(0, new Token(dedentToken, curLineNum()));
+					}
+					if(indent == indents[count]){
+						indentError = false;
+						break;
+					}
+					count--;
 				}
-				//Reset tabLength
-				if(indent == 0){
-					findTabLength = true;
-				}
-			}else{
-				System.out.println("HEI");
-				indents[numIndents++] = indent;
 
+				if(indentError){
+					scannerError("IdentError on " + line);
+				}
 			}
 		}
 		if(!skip){
