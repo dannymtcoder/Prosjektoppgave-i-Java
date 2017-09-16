@@ -63,7 +63,12 @@ public class Scanner {
 		return false;
     }
 
-
+	/**
+	 * This method reads a line and breaks it up in tokens. This is done by converting the line
+	 * into a charcter array and splice them up in words, integers, floats, strings, operators and delimiters.
+	 * Then I compare it to tokenKind if it is valid or not. This method also creates indent and dedent for
+	 * each line except for empty lines and comments.
+	 */
     private void readNextLine() {
 		curLineTokens.clear();
 		// Read the next line:
