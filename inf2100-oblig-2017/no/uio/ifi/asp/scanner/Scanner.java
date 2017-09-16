@@ -13,6 +13,8 @@ public class Scanner {
     private int indents[] = new int[100];
     private int numIndents = 0;
     private final int tabDist = 4;
+    private int tabLength = 0;
+    private boolean findTabLength = true;
 
 
     public Scanner(String fileName) {
@@ -86,14 +88,11 @@ public class Scanner {
 		}
 		//Break up the line and create tokens
 		String tmp = "";
-		boolean none = false;
 		boolean skip = false;
 		if(line != null) {
 			char[] ch = line.toCharArray();
 			for (int i = 0; i<ch.length;) {
 				if (ch[i] == '#') {
-					none = true;
-					skip = true;
 					break;
 				}
 				//Checks if it is a keyword or put it as a nameToken
@@ -246,28 +245,49 @@ public class Scanner {
 		if(!skip && curLineTokens.size() != 0){
 			line = expandLeadingTabs(line);
 			int indent = findIndent(line);
-			System.out.println(indent);
+
 			if(indents[numIndents-1] < indent){
+				int count = indents[numIndents-1];
 				indents[numIndents++] = indent;
 				curLineTokens.add(0, new Token(indentToken,curLineNum()));
+				if(findTabLength){
+					tabLength = indent;
+					findTabLength = false;
+				}
+				while(count<indent){
+					curLineTokens.add(0, new Token(indentToken,curLineNum()));
+					count += tabLength;
+				}
 			}else if(indents[numIndents-1] > indent){
+				int count = indents[numIndents-1];
 				indents[numIndents++] = indent;
-				curLineTokens.add(0, new Token(dedentToken,curLineNum()));
+
+				curLineTokens.add(0, new Token(dedentToken, curLineNum()));
+				count -= tabLength;
+
+				//Creates more than one dedent if the previous line was idented twice
+				while(count>indent) {
+					curLineTokens.add(0, new Token(dedentToken, curLineNum()));
+					count -= tabLength;
+				}
+				//Reset tabLength
+				if(indent == 0){
+					findTabLength = true;
+				}
 			}else{
+				System.out.println("HEI");
 				indents[numIndents++] = indent;
 
 			}
 		}
-		// Terminate line:
-		if(!none) {
-			curLineTokens.add(new Token(newLineToken, curLineNum()));
-		}else{
-			//TODO Fix when there is a comment
+		if(!skip){
 			curLineTokens.add(new Token(newLineToken, curLineNum()));
 		}
-		for (Token t: curLineTokens)
-			Main.log.noteToken(t);
+		if(skip || curLineTokens.size() != 1) {
+			for (Token t: curLineTokens)
+				Main.log.noteToken(t);
 
+		}
 	}
 
     public int curLineNum() {
