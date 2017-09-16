@@ -29,9 +29,6 @@ public class Scanner {
 		} catch (IOException e) {
 			scannerError("Cannot read " + fileName + "!");
 		}
-		//Read the whole file
-		readNextLine();
-		while(curLineTokens.get(0).kind != eofToken)readNextLine();
     }
 
 
@@ -69,7 +66,6 @@ public class Scanner {
 
     private void readNextLine() {
 		curLineTokens.clear();
-
 		// Read the next line:
 		String line = null;
 		try {
@@ -117,16 +113,15 @@ public class Scanner {
 						curLineTokens.add(new Token(nameToken,curLineNum()));
 						curLineTokens.get(curLineTokens.size()-1).name = tmp;
 					}
-
 					tmp = "";
 				}else if(isDigit(ch[i])){
 					//Checks if it is an integer og a float
 					boolean fl = false;
 					tmp += ch[i++];
 					while(ch.length > i) {
-						if (isDigit(ch[i])) {
+						if(isDigit(ch[i])) {
 							tmp += ch[i++];
-						} else if (ch[i] == '.') {
+						}else if (ch[i] == '.') {
 							tmp += ch[i++];
 							try{
 								if(!isDigit(ch[i])){
@@ -246,15 +241,15 @@ public class Scanner {
 			line = expandLeadingTabs(line);
 			int indent = findIndent(line);
 
-			if(indents[numIndents-1] < indent){
+			if(indents[numIndents-1] < indent){//Creates indentToken
 				indents[numIndents++] = indent;
 				curLineTokens.add(0, new Token(indentToken,curLineNum()));
-			}else if(indents[numIndents-1] > indent){
+			}else if(indents[numIndents-1] > indent){//Creates dedentToken
 				int count = numIndents-1;
 				indents[numIndents++] = indent;
 				boolean indentError = true;
 				int lower = indents[count];
-				//
+
 				while(count != -1) {
 					if(lower > indents[count]) {//Makes a dedent token if we are going lower
 						lower = indents[count];
