@@ -9,7 +9,7 @@ import static no.uio.ifi.asp.scanner.TokenKind.*;
 
 public class AspExpr extends AspSyntax {
     //-- Must be changed in part 2:
-    // ArrayList<AspAndTest> andTests = new ArrayList<>();
+    ArrayList<AspAndTest> andTests = new ArrayList<>();
 
     AspExpr(int n) {
 
@@ -20,8 +20,13 @@ public class AspExpr extends AspSyntax {
     public static AspExpr parse(Scanner s) {
 	Main.log.enterParser("expr");
 
-	//-- Must be changed in part 2:
-	AspExpr ae = null;
+	AspExpr ae = new AspExpr(s.curLineNum());
+
+	while(true){
+        ae.andTests.add(AspAndTest.parse(s));
+        if(s.curToken().kind != orToken)break;
+        skip(s, orToken);
+    }
 
 	Main.log.leaveParser("expr");
 	return ae;

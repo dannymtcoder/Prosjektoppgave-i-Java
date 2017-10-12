@@ -19,8 +19,10 @@ public class AspAssignment extends AspStmt{
 
         AspAssignment aa = new AspAssignment(s.curLineNum());
         skip(s, TokenKind.nameToken); aa.name = AspName.parse(s);
+        //Må sjekke subscription
         skip(s, TokenKind.equalToken);
 
+        aa.body = AspExpr.parse(s);
 
 
 

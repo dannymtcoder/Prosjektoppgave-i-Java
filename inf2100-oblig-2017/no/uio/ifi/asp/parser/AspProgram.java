@@ -23,13 +23,11 @@ public class AspProgram extends AspSyntax {
 	while (s.curToken().kind != eofToken) {
 	    System.out.println(s.curToken().kind);
         //-- Must be changed in part 2:
-        if (s.curToken().kind == nameToken){
+        if (s.curToken().kind != newLineToken){
             ap.stmts.add(AspStmt.parse(s));
 
-        }else{
-            skip(s, s.curToken().kind);
         }
-
+        skip(s, s.curToken().kind);
 	}
 
 	Main.log.leaveParser("program");
