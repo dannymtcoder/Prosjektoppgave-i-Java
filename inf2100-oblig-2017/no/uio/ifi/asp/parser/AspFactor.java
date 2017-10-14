@@ -27,9 +27,20 @@ public class AspFactor extends AspSyntax {
         }
         while(true){
             af.primary.add(AspPrimary.parse(s));
-           
+            tmp = s.curToken().kind;
+            if(tmp == TokenKind.astToken ||
+                    tmp == TokenKind.slashToken ||
+                    tmp == TokenKind.doubleSlashToken||
+                    tmp == TokenKind.percentToken){
+                af.factorOpr.add(AspFactorOpr.parse(s));
+                skip(s,tmp);
+            }else{
+                break;
+            }
         }
         Main.log.leaveParser("factor");
+
+        return af;
     }
     @Override
     void prettyPrint() {

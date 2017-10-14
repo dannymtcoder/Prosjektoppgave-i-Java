@@ -17,13 +17,19 @@ public abstract class AspStmt extends AspSyntax {
                     a = AspAssignment.parse(s);
                     break;
                 }else{
-
+                    a = AspExprStmt.parse(s);
+                    break;
                 }
-
+            case ifToken:
+                a = AspIfStmt.parse(s);
+                break;
+            case whileToken:
+                a = AspWhileStmt.parse(s);
+                break;
+            case returnToken:
+                a = AspReturnStmt.parse(s);
             default:
-                //Must be changed
-                System.out.println("Default");
-                //parserError("Expected an expression atom but found a " + s.curToken().kind + "!", s.curLineNum());
+                parserError("Expected a stmt but found a " + s.curToken().kind + "!", s.curLineNum());
         }
         Main.log.leaveParser("stmt");
         return a;

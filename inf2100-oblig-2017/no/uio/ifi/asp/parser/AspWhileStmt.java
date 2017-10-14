@@ -19,7 +19,7 @@ public class AspWhileStmt extends AspStmt {
 
         AspWhileStmt aws = new AspWhileStmt(s.curLineNum());
         skip(s, whileToken); aws.test = AspExpr.parse(s);
-        //skip(s, colonToken); aws.body = AspSuite.parse(s);
+        skip(s, colonToken); aws.body = AspSuite.parse(s);
 
         Main.log.leaveParser("while stmt");
         return aws;

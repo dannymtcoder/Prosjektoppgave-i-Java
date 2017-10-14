@@ -5,6 +5,7 @@ import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
+import no.uio.ifi.asp.scanner.TokenKind;
 
 public class AspName extends AspAtom {
     AspName(int n) {
@@ -15,8 +16,10 @@ public class AspName extends AspAtom {
         Main.log.enterParser("name");
 
         AspName an = new AspName(s.curLineNum());
+        skip(s, TokenKind.nameToken);
 
         Main.log.leaveParser("name");
+
         return an;
     }
     @Override

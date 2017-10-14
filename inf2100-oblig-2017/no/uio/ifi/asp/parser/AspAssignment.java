@@ -7,9 +7,12 @@ import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
 import no.uio.ifi.asp.scanner.TokenKind;
 
+import java.util.ArrayList;
+
 
 public class AspAssignment extends AspStmt{
     AspName name;
+    ArrayList<AspSubscription> as = new ArrayList<>();
     AspExpr body;
     AspAssignment(int n) {
         super(n);
@@ -18,12 +21,18 @@ public class AspAssignment extends AspStmt{
         Main.log.enterParser("Assignment");
 
         AspAssignment aa = new AspAssignment(s.curLineNum());
-        skip(s, TokenKind.nameToken); aa.name = AspName.parse(s);
-        //Må sjekke subscription
-        skip(s, TokenKind.equalToken);
-
+        aa.name = AspName.parse(s);
+        while(true) {
+            if (s.curToken().kind == TokenKind.leftBracketToken) {
+                aa.as.add(AspSubscription.parse(s));
+            }else{
+                break;
+            }
+        }
+        skip(s,TokenKind.equalToken);
         aa.body = AspExpr.parse(s);
 
+        skip(s, TokenKind.newLineToken);
 
 
         Main.log.leaveParser("Assignment");
