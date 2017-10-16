@@ -7,6 +7,7 @@ import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
 
 public class AspTermOpr extends AspSyntax {
+    String termOpr;
     AspTermOpr(int n) {
         super(n);
     }
@@ -14,6 +15,8 @@ public class AspTermOpr extends AspSyntax {
     static AspTermOpr parse(Scanner s) {
         Main.log.enterParser("term opr");
         AspTermOpr ato = new AspTermOpr(s.curLineNum());
+        ato.termOpr = s.curToken().kind.toString();
+        skip(s,s.curToken().kind);
         Main.log.leaveParser("term opr");
 
         return ato;
@@ -21,7 +24,7 @@ public class AspTermOpr extends AspSyntax {
 
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite(" " + termOpr + " ");
     }
 
     @Override

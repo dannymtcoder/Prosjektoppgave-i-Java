@@ -23,7 +23,7 @@ public class AspDictDisplay extends AspAtom{
         while(true){
             if(s.curToken().kind == TokenKind.stringToken){
                 adDisplay.asl.add(AspStringLiteral.parse(s));
-                skip(s, TokenKind.semicolonToken);
+                skip(s, TokenKind.colonToken);
                 adDisplay.expr.add(AspExpr.parse(s));
                 if(s.curToken().kind == TokenKind.commaToken){
                     skip(s, s.curToken().kind);
@@ -40,7 +40,17 @@ public class AspDictDisplay extends AspAtom{
     }
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite("{");
+        int counter = 0;
+        for(int i = 0;i<asl.size();i++){
+            asl.get(i).prettyPrint();
+            Main.log.prettyWrite(": ");
+            expr.get(i).prettyPrint();
+            if(counter<asl.size()-1){
+                Main.log.prettyWrite(", ");
+            }
+        }
+        Main.log.prettyWrite("}");
     }
 
     @Override

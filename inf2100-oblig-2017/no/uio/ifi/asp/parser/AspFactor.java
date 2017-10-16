@@ -20,20 +20,13 @@ public class AspFactor extends AspSyntax {
     public static AspFactor parse(Scanner s){
         Main.log.enterParser("factor");
         AspFactor af = new AspFactor(s.curLineNum());
-        TokenKind tmp = s.curToken().kind;
-        if(tmp == TokenKind.plusToken ||tmp == TokenKind.minusToken){
+        if(s.isFactorPrefix()){
             af.factorPrefix = AspFactorPrefix.parse(s);
-            skip(s,tmp);
         }
         while(true){
             af.primary.add(AspPrimary.parse(s));
-            tmp = s.curToken().kind;
-            if(tmp == TokenKind.astToken ||
-                    tmp == TokenKind.slashToken ||
-                    tmp == TokenKind.doubleSlashToken||
-                    tmp == TokenKind.percentToken){
+            if(s.isFactorOpr()){
                 af.factorOpr.add(AspFactorOpr.parse(s));
-                skip(s,tmp);
             }else{
                 break;
             }
@@ -44,7 +37,16 @@ public class AspFactor extends AspSyntax {
     }
     @Override
     void prettyPrint() {
-
+        if(factorPrefix != null){
+            factorPrefix.prettyPrint();
+        }
+        int counter = 0;
+        for(AspPrimary ap: primary){
+            ap.prettyPrint();
+            if(counter<primary.size()-1){
+                factorOpr.get(counter++).prettyPrint();
+            }
+        }
     }
 
     @Override

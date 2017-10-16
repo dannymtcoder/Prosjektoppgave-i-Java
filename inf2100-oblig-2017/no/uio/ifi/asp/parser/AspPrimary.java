@@ -37,7 +37,10 @@ public class AspPrimary extends AspSyntax {
 
     @Override
     void prettyPrint() {
-
+        body.prettyPrint();
+        for (AspPrimarySuffix aps: aps) {
+            aps.prettyPrint();
+        }
     }
 
     @Override

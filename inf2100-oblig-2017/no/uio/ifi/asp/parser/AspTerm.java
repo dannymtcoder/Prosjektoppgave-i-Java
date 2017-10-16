@@ -22,10 +22,8 @@ public class AspTerm extends AspSyntax {
 
         while(true){
             at.factor.add(AspFactor.parse(s));
-            TokenKind tmp = s.curToken().kind;
-            if(tmp == TokenKind.plusToken ||tmp == TokenKind.minusToken){
+            if(s.isTermOpr()){
                 at.termopr.add(AspTermOpr.parse(s));
-                skip(s,tmp);
             }else{
                 break;
             }
@@ -35,7 +33,13 @@ public class AspTerm extends AspSyntax {
     }
     @Override
     void prettyPrint() {
-
+        int counter = 0;
+        for(AspFactor af : factor){
+            af.prettyPrint();
+            if(counter<termopr.size()){
+                termopr.get(counter++).prettyPrint();
+            }
+        }
     }
 
     @Override

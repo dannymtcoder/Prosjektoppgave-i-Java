@@ -8,7 +8,6 @@ import static no.uio.ifi.asp.scanner.TokenKind.*;
 
 class AspAndTest extends AspSyntax {
     ArrayList<AspNotTest> notTests = new ArrayList<AspNotTest>();
-
     AspAndTest(int n){
 
         super(n);
@@ -20,6 +19,7 @@ class AspAndTest extends AspSyntax {
         AspAndTest aat = new AspAndTest(s.curLineNum());
         while(true){
             aat.notTests.add(AspNotTest.parse(s));
+            //If currenttoken is not an andToken break the loop
             if(s.curToken().kind != andToken)break;
             skip(s, andToken);
         }
@@ -29,14 +29,13 @@ class AspAndTest extends AspSyntax {
 
     @Override
     void prettyPrint() {
-        int nPrinted = 0;
-
+        int counter = 0;
         for(AspNotTest ant: notTests){
-            if(nPrinted == 0){
+            ant.prettyPrint();
+            if(counter<notTests.size()-1){
                 Main.log.prettyWrite(" and ");
             }
-            ant.prettyPrint();
-            ++nPrinted;
+            counter++;
         }
     }
 

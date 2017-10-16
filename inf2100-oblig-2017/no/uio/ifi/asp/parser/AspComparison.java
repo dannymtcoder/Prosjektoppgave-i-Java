@@ -27,15 +27,8 @@ public class AspComparison extends AspSyntax {
         AspComparison ac = new AspComparison(s.curLineNum());
             while(true){
                 ac.term.add(AspTerm.parse(s));
-                TokenKind tmp = s.curToken().kind;
-                if(tmp == lessToken ||
-                        tmp == greaterToken||
-                        tmp == doubleEqualToken ||
-                        tmp == lessEqualToken||
-                        tmp == greaterEqualToken||
-                        tmp == notEqualToken){
+                if(s.isCompOpr()){
                     ac.compopr.add(AspCompOpr.parse(s));
-                    skip(s, tmp);
                 }else{
                     break;
                 }
@@ -45,7 +38,11 @@ public class AspComparison extends AspSyntax {
     }
     @Override
     void prettyPrint() {
-
+        int counter = 0;
+        for(AspTerm ant: term){
+            ant.prettyPrint();
+            if(counter<compopr.size())compopr.get(counter++).prettyPrint();
+        }
     }
 
     @Override

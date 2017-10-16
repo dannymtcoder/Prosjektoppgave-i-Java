@@ -323,29 +323,46 @@ public class Scanner {
 
 
     public boolean isCompOpr() {
-		TokenKind k = curToken().kind;
-		//-- Must be changed in part 2:
+		TokenKind tmp = curToken().kind;
+		if(tmp == lessToken ||
+				tmp == greaterToken||
+				tmp == doubleEqualToken ||
+				tmp == lessEqualToken||
+				tmp == greaterEqualToken||
+				tmp == notEqualToken){
+			return true;
+		}
 		return false;
     }
 
 
     public boolean isFactorPrefix() {
-		TokenKind k = curToken().kind;
-		//-- Must be changed in part 2:
+		TokenKind tmp = curToken().kind;
+		if(tmp == TokenKind.plusToken ||tmp == TokenKind.minusToken){
+			return true;
+		}
 		return false;
     }
 
 
     public boolean isFactorOpr() {
-		TokenKind k = curToken().kind;
-		//-- Must be changed in part 2:
+		TokenKind tmp = curToken().kind;
+
+		if(tmp == TokenKind.astToken ||
+				tmp == TokenKind.slashToken ||
+				tmp == TokenKind.doubleSlashToken||
+				tmp == TokenKind.percentToken){
+			return true;
+		}
 		return false;
     }
 	
 
     public boolean isTermOpr() {
-		TokenKind k = curToken().kind;
-		//-- Must be changed in part 2:
+		TokenKind tmp = curToken().kind;
+		if(tmp == TokenKind.plusToken ||tmp == TokenKind.minusToken){
+			return true;
+		}
 		return false;
     }
 }

@@ -5,9 +5,10 @@ import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
-import no.uio.ifi.asp.scanner.TokenKind;
+
 
 public class AspBooleanLiteral extends AspAtom {
+    String bool;
     AspBooleanLiteral(int n) {
         super(n);
     }
@@ -15,6 +16,7 @@ public class AspBooleanLiteral extends AspAtom {
     static AspBooleanLiteral parse(Scanner s){
         Main.log.enterParser("boolean literal");
         AspBooleanLiteral abl = new AspBooleanLiteral(s.curLineNum());
+        abl.bool = s.curToken().kind.toString();
         skip(s, s.curToken().kind);
         Main.log.leaveParser("boolean literal");
 
@@ -22,7 +24,7 @@ public class AspBooleanLiteral extends AspAtom {
     }
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite(bool + "");
     }
 
     @Override

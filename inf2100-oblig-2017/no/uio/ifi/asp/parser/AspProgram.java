@@ -8,7 +8,6 @@ import no.uio.ifi.asp.scanner.*;
 import static no.uio.ifi.asp.scanner.TokenKind.*;
 
 public class AspProgram extends AspSyntax {
-    //-- Must be changed in part 2:
      ArrayList<AspStmt> stmts = new ArrayList<>();
 
     AspProgram(int n) {
@@ -21,8 +20,10 @@ public class AspProgram extends AspSyntax {
 
 	AspProgram ap = new AspProgram(s.curLineNum());
 	while (s.curToken().kind != eofToken) {
-        // Må kanskje endres
-        if(s.curToken().kind != eofToken) {
+
+        if(s.curToken().kind == newLineToken){
+            skip(s, newLineToken);
+        }else if(s.curToken().kind != eofToken) {
             ap.stmts.add(AspStmt.parse(s));
         }
 
@@ -35,7 +36,9 @@ public class AspProgram extends AspSyntax {
 
     @Override
     public void prettyPrint() {
-	//-- Must be changed in part 2:
+        for(AspStmt tmp: stmts){
+            tmp.prettyPrint();
+        }
     }
 
 

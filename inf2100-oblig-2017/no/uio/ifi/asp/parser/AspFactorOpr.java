@@ -7,19 +7,22 @@ import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
 
 public class AspFactorOpr extends AspSyntax {
+    String factorOpr;
     AspFactorOpr(int n) {
         super(n);
     }
     public static AspFactorOpr parse(Scanner s) {
         Main.log.enterParser("factor opr");
         AspFactorOpr afo = new AspFactorOpr(s.curLineNum());
+        afo.factorOpr = s.curToken().kind.toString();
+        skip(s,s.curToken().kind);
         Main.log.leaveParser("factor opr");
 
         return afo;
     }
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite(" " + factorOpr + " ");
     }
 
     @Override

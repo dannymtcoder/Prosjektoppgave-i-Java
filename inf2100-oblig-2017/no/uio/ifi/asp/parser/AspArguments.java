@@ -21,11 +21,11 @@ public class AspArguments extends AspPrimarySuffix {
         Main.log.enterParser("arguments");
         AspArguments aa = new AspArguments(s.curLineNum());
         skip(s,leftParToken);
-        //Usikker om dette er riktig
         while(true){
-            if(s.curToken().kind == andToken ||
-                    s.curToken().kind == orToken){
+            //Checks if there is expr before rightpar if not break the loop
+            if(s.curToken().kind != rightParToken){
                 aa.expr.add(AspExpr.parse(s));
+                //If there is a comma, loop it again
                 if(s.curToken().kind == commaToken){
                     skip(s, s.curToken().kind);
                 }else{
@@ -43,7 +43,16 @@ public class AspArguments extends AspPrimarySuffix {
     }
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite("(");
+        int counter = 0;
+        for(AspExpr ae: expr){
+            ae.prettyPrint();
+            if(counter<expr.size()-1){
+                Main.log.prettyWrite(", ");
+                counter++;
+            }
+        }
+        Main.log.prettyWrite(")");
     }
 
     @Override

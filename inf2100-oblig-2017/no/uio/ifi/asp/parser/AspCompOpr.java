@@ -7,6 +7,7 @@ import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
 
 public class AspCompOpr extends AspSyntax {
+    String comp;
     AspCompOpr(int n) {
         super(n);
     }
@@ -14,13 +15,15 @@ public class AspCompOpr extends AspSyntax {
     static AspCompOpr parse(Scanner s){
         Main.log.enterParser("comp opr");
         AspCompOpr aco = new AspCompOpr(s.curLineNum());
+        aco.comp = s.curToken().kind.toString();
+        skip(s, s.curToken().kind);
         Main.log.leaveParser("comp opr");
 
         return aco;
     }
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite(" " + comp + " ");
     }
 
     @Override

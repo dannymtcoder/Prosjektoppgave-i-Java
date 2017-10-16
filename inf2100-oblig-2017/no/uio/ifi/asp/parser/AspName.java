@@ -8,6 +8,7 @@ import no.uio.ifi.asp.scanner.Scanner;
 import no.uio.ifi.asp.scanner.TokenKind;
 
 public class AspName extends AspAtom {
+    String name;
     AspName(int n) {
         super(n);
     }
@@ -16,6 +17,7 @@ public class AspName extends AspAtom {
         Main.log.enterParser("name");
 
         AspName an = new AspName(s.curLineNum());
+        an.name = s.curToken().name;
         skip(s, TokenKind.nameToken);
 
         Main.log.leaveParser("name");
@@ -24,7 +26,7 @@ public class AspName extends AspAtom {
     }
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite(name);
     }
 
     @Override

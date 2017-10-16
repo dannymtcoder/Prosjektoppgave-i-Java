@@ -12,6 +12,16 @@ public abstract class AspStmt extends AspSyntax {
         Main.log.enterParser("stmt");
         AspStmt a = null;
         switch (s.curToken().kind) {
+            case leftParToken:
+            case leftBraceToken:
+            case leftBracketToken:
+            case trueToken:
+            case falseToken:
+            case notToken:
+            case floatToken:
+            case minusToken:
+            case integerToken:
+            case stringToken:
             case nameToken:
                 if(s.anyEqualToken()){
                     a = AspAssignment.parse(s);
@@ -28,6 +38,13 @@ public abstract class AspStmt extends AspSyntax {
                 break;
             case returnToken:
                 a = AspReturnStmt.parse(s);
+                break;
+            case passToken:
+                a = AspPassStmt.parse(s);
+                break;
+            case defToken:
+                a = AspFuncDef.parse(s);
+                break;
             default:
                 parserError("Expected a stmt but found a " + s.curToken().kind + "!", s.curLineNum());
         }

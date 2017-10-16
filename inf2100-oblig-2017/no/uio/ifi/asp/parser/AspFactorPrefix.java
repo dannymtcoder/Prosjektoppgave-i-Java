@@ -7,6 +7,7 @@ import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
 
 public class AspFactorPrefix extends AspSyntax {
+    String factorPrefix;
     AspFactorPrefix(int n) {
         super(n);
     }
@@ -14,6 +15,8 @@ public class AspFactorPrefix extends AspSyntax {
     static AspFactorPrefix parse(Scanner s) {
         Main.log.enterParser("factor prefix");
         AspFactorPrefix afp = new AspFactorPrefix(s.curLineNum());
+        afp.factorPrefix = s.curToken().kind.toString();
+        skip(s, s.curToken().kind);
         Main.log.leaveParser("factor prefix");
 
         return afp;
@@ -21,7 +24,7 @@ public class AspFactorPrefix extends AspSyntax {
 
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite(" " + factorPrefix + " ");
     }
 
     @Override

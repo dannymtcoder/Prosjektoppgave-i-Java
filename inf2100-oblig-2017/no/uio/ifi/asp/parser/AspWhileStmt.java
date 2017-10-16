@@ -18,8 +18,11 @@ public class AspWhileStmt extends AspStmt {
         Main.log.enterParser("while stmt");
 
         AspWhileStmt aws = new AspWhileStmt(s.curLineNum());
-        skip(s, whileToken); aws.test = AspExpr.parse(s);
-        skip(s, colonToken); aws.body = AspSuite.parse(s);
+        skip(s, whileToken);
+        aws.test = AspExpr.parse(s);
+        skip(s, colonToken);
+        aws.body = AspSuite.parse(s);
+
 
         Main.log.leaveParser("while stmt");
         return aws;
@@ -27,7 +30,10 @@ public class AspWhileStmt extends AspStmt {
 
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite("while ");
+        test.prettyPrint();
+        Main.log.prettyWrite(":");
+        body.prettyPrint();
     }
 
     @Override

@@ -20,8 +20,7 @@ public class AspListDisplay extends AspAtom {
         AspListDisplay ald = new AspListDisplay(s.curLineNum());
         skip(s, TokenKind.leftBracketToken);
         while(true){
-            if(s.curToken().kind == TokenKind.andToken ||
-                    s.curToken().kind == TokenKind.orToken){
+            if(s.curToken().kind != TokenKind.rightBracketToken){
                 ald.expr.add(AspExpr.parse(s));
                 if(s.curToken().kind == TokenKind.commaToken){
                     skip(s, TokenKind.commaToken);
@@ -38,7 +37,16 @@ public class AspListDisplay extends AspAtom {
     }
     @Override
     void prettyPrint() {
-
+        Main.log.prettyWrite("[");
+        int counter = 0;
+        for(AspExpr ae: expr){
+            ae.prettyPrint();
+            if(counter<expr.size()-1){
+                Main.log.prettyWrite(", ");
+                counter++;
+            }
+        }
+        Main.log.prettyWrite("]");
     }
 
     @Override

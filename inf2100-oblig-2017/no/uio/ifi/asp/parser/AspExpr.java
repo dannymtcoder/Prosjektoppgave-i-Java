@@ -9,7 +9,6 @@ import static no.uio.ifi.asp.scanner.TokenKind.*;
 
 public class AspExpr extends AspSyntax {
     ArrayList<AspAndTest> andTests = new ArrayList<>();
-
     AspExpr(int n) {
 
         super(n);
@@ -34,7 +33,14 @@ public class AspExpr extends AspSyntax {
 
     @Override
     public void prettyPrint() {
-	//-- Must be changed in part 2:
+        int counter = 0;
+        for(AspAndTest an: andTests){
+            an.prettyPrint();
+            if(counter < andTests.size()-1){
+                Main.log.prettyWrite(" or ");
+            }
+            counter++;
+        }
     }
 
 

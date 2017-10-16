@@ -18,11 +18,12 @@ public class AspAssignment extends AspStmt{
         super(n);
     }
     public static AspAssignment parse(Scanner s) {
-        Main.log.enterParser("Assignment");
+        Main.log.enterParser("assignment");
 
         AspAssignment aa = new AspAssignment(s.curLineNum());
         aa.name = AspName.parse(s);
         while(true) {
+            //Checks if there is leftbracket if not break the loop
             if (s.curToken().kind == TokenKind.leftBracketToken) {
                 aa.as.add(AspSubscription.parse(s));
             }else{
@@ -35,13 +36,19 @@ public class AspAssignment extends AspStmt{
         skip(s, TokenKind.newLineToken);
 
 
-        Main.log.leaveParser("Assignment");
+        Main.log.leaveParser("assignment");
        return aa;
     }
 
     @Override
     void prettyPrint() {
-
+        name.prettyPrint();
+        for(AspSubscription tmp: as){
+            tmp.prettyPrint();
+        }
+        Main.log.prettyWrite(" = ");
+        body.prettyPrint();
+        Main.log.prettyWriteLn();
     }
 
     @Override
