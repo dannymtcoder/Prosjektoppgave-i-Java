@@ -9,6 +9,8 @@ import no.uio.ifi.asp.scanner.TokenKind;
 
 import java.util.ArrayList;
 
+import static no.uio.ifi.asp.scanner.TokenKind.leftParToken;
+
 public class AspPrimary extends AspSyntax {
     AspAtom body;
     ArrayList<AspPrimarySuffix> aps = new ArrayList<>();
@@ -34,7 +36,6 @@ public class AspPrimary extends AspSyntax {
         return ap;
     }
 
-
     @Override
     void prettyPrint() {
         body.prettyPrint();
@@ -45,7 +46,18 @@ public class AspPrimary extends AspSyntax {
 
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
-        return null;
+        RuntimeValue v = body.eval(curScope);
+
+      for(AspPrimarySuffix ap: aps){
+            RuntimeValue tmp = ap.eval(curScope);
+            if(ap.token == "["){
+                v = v.evalSubscription(tmp,this);
+            }else if(ap.token == "("){
+
+            }
+          //v = v.evalAdd(ap.eval(curScope),this);
+      }
+      return v;
     }
 
 

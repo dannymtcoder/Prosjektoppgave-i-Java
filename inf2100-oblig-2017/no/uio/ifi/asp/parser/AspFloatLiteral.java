@@ -1,6 +1,7 @@
 package no.uio.ifi.asp.parser;
 
 import no.uio.ifi.asp.main.Main;
+import no.uio.ifi.asp.runtime.RuntimeFloatValue;
 import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
@@ -30,6 +31,6 @@ public class AspFloatLiteral extends AspAtom{
 
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
-        return null;
+        return new RuntimeFloatValue(floatLiteral);
     }
 }

@@ -47,6 +47,42 @@ public class AspComparison extends AspSyntax {
 
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
-        return null;
+        //Maa fikses,
+        RuntimeValue v = null, result, tmp = null, tmpBool = null;
+        boolean lagt = true;
+        for(int i = 0;i<term.size();i++){
+            tmp = term.get(i).eval(curScope);
+            if(term.size()-1>i){
+                //FIKS
+                TokenKind t = compopr.get(i).t;
+                switch(t){
+                    case lessToken:
+                        tmpBool = tmp.evalLess(term.get(i+1).eval(curScope),this);
+                        break;
+                    case lessEqualToken:
+                        tmpBool = tmp.evalLessEqual(term.get(i+1).eval(curScope),this);
+                        break;
+                    case greaterToken:
+                        tmpBool = tmp.evalGreater(term.get(i+1).eval(curScope),this);
+                        break;
+                    case greaterEqualToken:
+                        tmpBool = tmp.evalGreaterEqual(term.get(i+1).eval(curScope),this);
+                        break;
+                    case doubleEqualToken:
+                        tmpBool = tmp.evalEqual(term.get(i+1).eval(curScope),this);
+                        break;
+                    case notEqualToken:
+                        tmpBool = tmp.evalNotEqual(term.get(i+1).eval(curScope),this);
+                        break;
+                }
+                if(i == 0||!tmpBool.getBoolValue("comparison", this) ){
+                    v = tmpBool;
+                }
+            }
+            if(term.size() == 1){
+                v = term.get(i).eval(curScope);
+            }
+        }
+        return v;
     }
 }

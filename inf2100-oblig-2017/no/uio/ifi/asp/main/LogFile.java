@@ -83,7 +83,7 @@ public class LogFile {
     /**
      * Make a note of entering or leaving a parser method.
      *
-     * @param nonterm  The non-terminal being parsed
+     * @param nonTerm  The non-terminal being parsed
      */
     public void enterParser(String nonTerm) {
 	writeParseInfo(nonTerm);

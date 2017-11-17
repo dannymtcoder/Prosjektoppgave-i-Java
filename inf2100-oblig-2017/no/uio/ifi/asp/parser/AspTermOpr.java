@@ -5,9 +5,10 @@ import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
+import no.uio.ifi.asp.scanner.TokenKind;
 
 public class AspTermOpr extends AspSyntax {
-    String termOpr;
+    TokenKind termOpr;
     AspTermOpr(int n) {
         super(n);
     }
@@ -15,7 +16,7 @@ public class AspTermOpr extends AspSyntax {
     static AspTermOpr parse(Scanner s) {
         Main.log.enterParser("term opr");
         AspTermOpr ato = new AspTermOpr(s.curLineNum());
-        ato.termOpr = s.curToken().kind.toString();
+        ato.termOpr = s.curToken().kind;
         skip(s,s.curToken().kind);
         Main.log.leaveParser("term opr");
 

@@ -41,6 +41,10 @@ class AspAndTest extends AspSyntax {
 
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
-        return null;
+        RuntimeValue v = null;
+        for(AspNotTest at: notTests){
+            v = at.eval(curScope);
+        }
+        return v;
     }
 }

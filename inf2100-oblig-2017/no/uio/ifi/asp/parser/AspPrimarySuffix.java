@@ -5,6 +5,8 @@ import no.uio.ifi.asp.scanner.Scanner;
 import no.uio.ifi.asp.scanner.TokenKind;
 
 public abstract class AspPrimarySuffix extends AspSyntax {
+
+    String token;
     AspPrimarySuffix(int n) {
         super(n);
     }
@@ -17,6 +19,8 @@ public abstract class AspPrimarySuffix extends AspSyntax {
             aps = AspArguments.parse(s);
         }else{
             aps = AspSubscription.parse(s);
+            aps.token = TokenKind.leftBracketToken.toString();
+
         }
         Main.log.leaveParser("primary suffix");
         return aps;

@@ -5,9 +5,11 @@ import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
+import no.uio.ifi.asp.scanner.TokenKind;
 
 public class AspCompOpr extends AspSyntax {
     String comp;
+    TokenKind t;
     AspCompOpr(int n) {
         super(n);
     }
@@ -16,6 +18,7 @@ public class AspCompOpr extends AspSyntax {
         Main.log.enterParser("comp opr");
         AspCompOpr aco = new AspCompOpr(s.curLineNum());
         aco.comp = s.curToken().kind.toString();
+        aco.t = s.curToken().kind;
         skip(s, s.curToken().kind);
         Main.log.leaveParser("comp opr");
 

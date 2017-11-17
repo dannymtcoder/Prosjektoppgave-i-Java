@@ -92,11 +92,16 @@ public class Main {
 
     private static void doTestExpr(Scanner s) {
 	ArrayList<AspExpr> exprs = new ArrayList<>();
-	while (s.curToken().kind != eofToken) {
-	    exprs.add(AspExpr.parse(s));
-	    AspExpr.skip(s, newLineToken);
-	}
 
+	while (s.curToken().kind != eofToken) {
+
+		if(s.curToken().kind != newLineToken){
+			exprs.add(AspExpr.parse(s));
+			AspExpr.skip(s, newLineToken);
+		}else{
+			AspExpr.skip(s, newLineToken);
+		}
+	}
 	RuntimeScope emptyScope = new RuntimeScope();
 	for (AspExpr e: exprs) {
 	    e.prettyPrint();  log.prettyWriteLn(" ==>");

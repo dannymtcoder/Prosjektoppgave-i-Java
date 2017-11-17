@@ -1,6 +1,7 @@
 package no.uio.ifi.asp.parser;
 
 import no.uio.ifi.asp.main.Main;
+import no.uio.ifi.asp.runtime.RuntimeDictValue;
 import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
@@ -41,12 +42,11 @@ public class AspDictDisplay extends AspAtom{
     @Override
     void prettyPrint() {
         Main.log.prettyWrite("{");
-        int counter = 0;
         for(int i = 0;i<asl.size();i++){
             asl.get(i).prettyPrint();
             Main.log.prettyWrite(": ");
             expr.get(i).prettyPrint();
-            if(counter<asl.size()-1){
+            if(i<asl.size()-1){
                 Main.log.prettyWrite(", ");
             }
         }
@@ -55,7 +55,11 @@ public class AspDictDisplay extends AspAtom{
 
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
-        return null;
+        RuntimeDictValue v = new RuntimeDictValue();
+        for(int i = 0; i<asl.size();i++){
+            v.add(asl.get(i).eval(curScope).getStringValue("dict", this), expr.get(i).eval(curScope));
+        }
+        return v;
     }
 
 }

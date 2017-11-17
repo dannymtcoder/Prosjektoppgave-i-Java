@@ -5,6 +5,7 @@ import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
 import no.uio.ifi.asp.scanner.Scanner;
+import no.uio.ifi.asp.scanner.TokenKind;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,6 @@ import static no.uio.ifi.asp.scanner.TokenKind.*;
 
 public class AspArguments extends AspPrimarySuffix {
     ArrayList<AspExpr> expr = new ArrayList<>();
-
     AspArguments(int n) {
         super(n);
     }
@@ -57,6 +57,6 @@ public class AspArguments extends AspPrimarySuffix {
 
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
-        return null;
+        return expr.get(0).eval(curScope);
     }
 }
