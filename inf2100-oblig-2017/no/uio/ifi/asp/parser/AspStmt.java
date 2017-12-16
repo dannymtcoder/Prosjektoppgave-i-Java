@@ -32,6 +32,7 @@ public abstract class AspStmt extends AspSyntax {
                 }
             case ifToken:
                 a = AspIfStmt.parse(s);
+
                 break;
             case whileToken:
                 a = AspWhileStmt.parse(s);

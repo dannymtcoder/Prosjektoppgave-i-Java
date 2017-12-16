@@ -49,6 +49,7 @@ public class AspExpr extends AspSyntax {
 	    RuntimeValue v = null;
 	    for(AspAndTest at: andTests){
             v = at.eval(curScope);
+
             if(v.getBoolValue("expr", this))return v;
         }
         return v;

@@ -1,6 +1,7 @@
 package no.uio.ifi.asp.parser;
 
 import no.uio.ifi.asp.main.Main;
+import no.uio.ifi.asp.runtime.RuntimeListValue;
 import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
@@ -47,15 +48,26 @@ public class AspPrimary extends AspSyntax {
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
         RuntimeValue v = body.eval(curScope);
-
-      for(AspPrimarySuffix ap: aps){
-            RuntimeValue tmp = ap.eval(curScope);
-            if(ap.token == "["){
+        RuntimeValue func = null;
+      for(int j = 0; j<aps.size();j++){
+            RuntimeValue tmp = aps.get(j).eval(curScope);
+            if(aps.get(j).token == "["){ ;
                 v = v.evalSubscription(tmp,this);
-            }else if(ap.token == "("){
+            }else if(aps.get(j) instanceof AspArguments){
 
+                RuntimeListValue list = (RuntimeListValue) tmp;
+                func = curScope.find(v.getStringValue("primary", this),this);
+                String output = "Call function " + v.getStringValue("primary", this) + " with params [";
+                for(int i = 0; i<list.getList().size(); i++){
+                    if(i != list.getList().size()-1) {
+                        output += list.getList().get(0) + " ,";
+                    }
+                    output += list.getList().get(0);
+                }
+                output += "]";
+                Main.log.traceEval(output, this);
+                v = func.evalFuncCall(list.getList(), curScope, this);
             }
-          //v = v.evalAdd(ap.eval(curScope),this);
       }
       return v;
     }

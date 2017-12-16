@@ -30,6 +30,7 @@ public class AspPassStmt extends AspStmt {
 
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
+        trace("pass");
         return null;
     }
 }

@@ -1,6 +1,7 @@
 package no.uio.ifi.asp.parser;
 
 import no.uio.ifi.asp.main.Main;
+import no.uio.ifi.asp.runtime.RuntimeFunc;
 import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
@@ -60,6 +61,18 @@ public class AspFuncDef extends AspStmt{
 
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
-        return null;
+
+        RuntimeValue v = new RuntimeFunc(this,curScope, body.name);
+        Main.log.traceEval("def " + body.name, this);
+        curScope.assign(body.name, v);
+
+        return v;
+    }
+    public ArrayList<AspName> getList(){
+        return an;
+    }
+
+    public AspSuite getTest() {
+        return test;
     }
 }

@@ -116,17 +116,17 @@ public class Main {
 
 
     private static void doRunInterpreter(Scanner s) {
-	AspProgram prog = AspProgram.parse(s);
-	if (log.doLogPrettyPrint) 
-	    prog.prettyPrint();
+		AspProgram prog = AspProgram.parse(s);
+		if (log.doLogPrettyPrint)
+			prog.prettyPrint();
 
-	RuntimeScope lib = new RuntimeLibrary();
-	RuntimeScope globals = new RuntimeScope(lib);
-	try {
-	    prog.eval(globals);
-	} catch (RuntimeReturnValue rrv) {
-	    panic("Uncaught return value!");
-	}
+		RuntimeScope lib = new RuntimeLibrary();
+		RuntimeScope globals = new RuntimeScope(lib);
+		try {
+			prog.eval(globals);
+		} catch (RuntimeReturnValue rrv) {
+			panic("Uncaught return value!");
+		}
     }
 
 

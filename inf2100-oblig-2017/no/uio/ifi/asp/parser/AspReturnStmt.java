@@ -34,6 +34,8 @@ public class AspReturnStmt extends AspStmt {
 
     @Override
     RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
-        return null;
+        RuntimeValue v = body.eval(curScope);
+        trace("return " + v.showInfo());
+        throw new RuntimeReturnValue(v);
     }
 }

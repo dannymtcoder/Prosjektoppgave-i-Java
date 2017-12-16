@@ -2,8 +2,10 @@ package no.uio.ifi.asp.runtime;
 
 // For part 4:
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import no.uio.ifi.asp.parser.AspSubscription;
 import no.uio.ifi.asp.parser.AspSyntax;
 
 public class RuntimeScope {

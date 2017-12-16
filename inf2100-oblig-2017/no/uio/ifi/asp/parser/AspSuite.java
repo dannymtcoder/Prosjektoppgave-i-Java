@@ -72,8 +72,12 @@ public class AspSuite extends AspSyntax {
     }
 
     @Override
-    RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
-        return null;
+    public RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue {
+        RuntimeValue v = null;
+        for(int i = 0;i<as.size();i++){
+            v = as.get(i).eval(curScope);
+        }
+        return v;
     }
 
 

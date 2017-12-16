@@ -60,6 +60,7 @@ public class AspFactor extends AspSyntax {
             }
         }
         for(int i = 1; i<primary.size();i++){
+
             if(i<primary.size()){
                 TokenKind kind = factorOpr.get(i-1).factorOpr;
                 switch(kind){

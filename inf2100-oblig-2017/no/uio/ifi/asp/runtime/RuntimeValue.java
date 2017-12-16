@@ -135,7 +135,7 @@ public abstract class RuntimeValue {
     }
 
     public RuntimeValue evalFuncCall(ArrayList<RuntimeValue> actualParams, 
-				     RuntimeScope scope, AspSyntax where) {
+				     RuntimeScope scope, AspSyntax where) throws RuntimeReturnValue {
 	runtimeError("'Function call (...)' undefined for "+typeName()+"!", where);
 	return null;  // Required by the compiler!
     }
